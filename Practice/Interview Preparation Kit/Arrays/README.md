@@ -3,4 +3,4 @@
 2. [Arrays: Left Rotation](https://www.hackerrank.com/challenges/ctci-array-left-rotation)
 3. [New Year Chaos](https://www.hackerrank.com/challenges/new-year-chaos)
 4. [Minimum Swaps 2](https://www.hackerrank.com/challenges/minimum-swaps-2)
-4 [Array Manipulation](https://www.hackerrank.com/challenges/crush)
+5. [Array Manipulation](https://www.hackerrank.com/challenges/crush)
