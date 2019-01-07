@@ -24,13 +24,16 @@ extension Array where Element == String {
 
 func checkMagazine(magazine: [String], note: [String]) {
     var result: Result = .failure
-    let magazine = magazine.occurrencies
-    for word in note.occurrencies {
-        guard let count = magazine[word.key], count >= word.value else {
+    var counter = magazine.reduce(into: [:]) { (count, word) in
+        count[word, default: 0] += 1
+    }
+    for word in note {
+        guard counter[word, default: 0] != 0 else {
             result = .failure
             result.printed()
             return
         }
+        counter[word, default: 0] -= 1
     }
     result = .success
     result.printed()
