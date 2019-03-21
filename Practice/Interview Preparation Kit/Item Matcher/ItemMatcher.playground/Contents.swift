@@ -37,16 +37,16 @@ class ItemMatcher {
     
     // Complete the itemMatching function below.
     func itemMatching(group: String, category: String) -> Item? {
-        return items.dropFirst().reduce(items.first) { (nearestMatch, item) -> Item? in
-            let lhs = nearestMatch?.matchFor(group: group, category: category)
+        return items.dropFirst().reduce(items.first) { (closestMatch, item) -> Item? in
+            let lhs = closestMatch?.matchFor(group: group, category: category)
             let rhs = item.matchFor(group: group, category: category)
             switch (lhs, rhs) {
             case let (lhs?, rhs?):
-                return lhs.rawValue < rhs.rawValue ? item : nearestMatch
+                return lhs.rawValue < rhs.rawValue ? item : closestMatch
             case (_, .some):
                 return item
             default:
-                return nearestMatch
+                return closestMatch
             }
         }
     }
