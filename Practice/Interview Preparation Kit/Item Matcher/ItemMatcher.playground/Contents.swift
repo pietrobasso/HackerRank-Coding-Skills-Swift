@@ -7,33 +7,17 @@ protocol Item {
 }
 
 extension Item {
-    private func narrowMatches(group: String) -> Bool {
-        return self.group == group
-    }
-    
-    private func narrowMatches(category: String) -> Bool {
-        return self.category == category
-    }
-    
-    private func broadMatches(group: String) -> Bool {
-        return self.group == group || self.group == "*"
-    }
-    
-    private func broadMatches(category: String) -> Bool {
-        return self.category == category || self.category == "*"
-    }
-    
     func matchFor(group: String, category: String) -> Match? {
-        if narrowMatches(group: group) && narrowMatches(category: category) {
+        if self.group == group && self.category == category {
             return .full
         }
-        if narrowMatches(group: group) && broadMatches(category: category) {
+        if self.group == group && self.category == "*" {
             return .half
         }
-        if broadMatches(group: group) && narrowMatches(category: category) {
+        if self.group == "*" && self.category == category {
             return .half
         }
-        if broadMatches(group: group) && broadMatches(category: category) {
+        if self.group == "*" && self.category == "*" {
             return .broad
         }
         return nil
