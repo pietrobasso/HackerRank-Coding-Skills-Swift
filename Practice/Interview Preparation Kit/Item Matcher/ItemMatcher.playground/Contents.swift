@@ -7,21 +7,41 @@ protocol Item {
 }
 
 extension Item {
-    func narrowMatches(group: String) -> Bool {
+    private func narrowMatches(group: String) -> Bool {
         return self.group == group
     }
     
-    func narrowMatches(category: String) -> Bool {
+    private func narrowMatches(category: String) -> Bool {
         return self.category == category
     }
     
-    func broadMatches(group: String) -> Bool {
+    private func broadMatches(group: String) -> Bool {
         return self.group == group || self.group == "*"
     }
     
-    func broadMatches(category: String) -> Bool {
+    private func broadMatches(category: String) -> Bool {
         return self.category == category || self.category == "*"
     }
+    
+    func matchFor(group: String, category: String) -> Match? {
+        if narrowMatches(group: group) && narrowMatches(category: category) {
+            return .full
+        }
+        if narrowMatches(group: group) && broadMatches(category: category) {
+            return .half
+        }
+        if broadMatches(group: group) && narrowMatches(category: category) {
+            return .half
+        }
+        if broadMatches(group: group) && broadMatches(category: category) {
+            return .broad
+        }
+        return nil
+    }
+}
+
+enum Match: Int {
+    case broad, half, full
 }
 
 class ItemMatcher {
@@ -33,14 +53,18 @@ class ItemMatcher {
     
     // Complete the itemMatching function below.
     func itemMatching(group: String, category: String) -> Item? {
-        var result: Item? = nil
-        result = items.first { $0.narrowMatches(group: group) && $0.narrowMatches(category: category) }
-        if result != nil { return result }
-        result = items.first { $0.broadMatches(group: group) && $0.narrowMatches(category: category) }
-        if result != nil { return result }
-        result = items.first { $0.narrowMatches(group: group) && $0.broadMatches(category: category) }
-        if result != nil { return result }
-        return items.first { $0.broadMatches(group: group) && $0.broadMatches(category: category) }
+        return items.dropFirst().reduce(items.first) { (nearestMatch, item) -> Item? in
+            let lhs = nearestMatch?.matchFor(group: group, category: category)
+            let rhs = item.matchFor(group: group, category: category)
+            switch (lhs, rhs) {
+            case let (lhs?, rhs?):
+                return lhs.rawValue < rhs.rawValue ? item : nearestMatch
+            case (_, .some):
+                return item
+            default:
+                return nearestMatch
+            }
+        }
     }
     
 }
