@@ -6,6 +6,10 @@ protocol Item {
     
 }
 
+enum Match: Int {
+    case broad, half, full
+}
+
 extension Item {
     func matchFor(group: String, category: String) -> Match? {
         if self.group == group && self.category == category {
@@ -22,10 +26,6 @@ extension Item {
         }
         return nil
     }
-}
-
-enum Match: Int {
-    case broad, half, full
 }
 
 class ItemMatcher {
